@@ -10,5 +10,7 @@ group :test do
 end
 
 group :development, :test do
+  gem 'rb-readline'
+  gem 'guard-rspec'
   gem 'rubocop', '~> 0.45.0', require: false
 end
