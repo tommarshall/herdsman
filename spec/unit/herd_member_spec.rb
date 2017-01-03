@@ -16,7 +16,7 @@ describe Herdsman::HerdMember do
   let(:ungathered_repo) do
     double(
       path: '/tmp/foo.git',
-      initialized?: false,
+      initialized?: true,
       has_unpushed_commits?: true,
       has_unpulled_commits?: true,
       has_untracked_files?: true,
@@ -28,15 +28,37 @@ describe Herdsman::HerdMember do
   describe '#name' do
     it 'returns the directory name when no name set' do
       herd_member = described_class.new(gathered_repo, 'master')
+
       expect(herd_member.name).to eq 'foo.git'
     end
     it 'returns the assigned name when a name is set' do
       herd_member = described_class.new(gathered_repo, 'master', name: 'bar')
+
       expect(herd_member.name).to eq 'bar'
     end
   end
 
+  describe '#gathered?' do
+    it 'returns true when gathered' do
+      herd_member = described_class.new(gathered_repo, 'master')
+
+      expect(herd_member).to be_gathered
+    end
+    it 'returns false when ungathered' do
+      herd_member = described_class.new(ungathered_repo, 'master')
+
+      expect(herd_member).to_not be_gathered
+    end
+  end
+
   describe '#status_report' do
+    it 'does not include any previous messages' do
+      herd_member = described_class.new(ungathered_repo, 'master')
+      status_report_first_size  = herd_member.status_report.size
+      status_report_second_size = herd_member.status_report.size
+
+      expect(status_report_first_size).to eq status_report_second_size
+    end
     context 'when gathered' do
       it 'returns an array of info messages' do
         herd_member = described_class.new(gathered_repo, 'master')

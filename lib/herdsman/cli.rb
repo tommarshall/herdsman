@@ -1,4 +1,5 @@
 require 'thor'
+require 'logger'
 
 module Herdsman
   class CLI < Thor
@@ -8,10 +9,9 @@ module Herdsman
 
     desc 'status', 'Check the status of the repositories in the herd'
     def status
-      cmd = Herdsman::Command::Status.new(herd: herd, reporter: reporter)
-      report = cmd.run
-      $stderr.puts report.to_s
-      exit report.has_warnings? ? 1 : 0
+      cmd = Herdsman::Command::Status.new(herd: herd, logger: logger)
+      result = cmd.run
+      exit result
     end
 
     desc 'version', 'Show the herdsman version'
@@ -34,11 +34,24 @@ module Herdsman
     end
 
     def herd
-      Herdsman::Herd.new(env, config)
+      Herdsman::Herd.new(env, config, herd_members(config.repos))
     end
 
-    def reporter
-      Herdsman::Reporter.new
+    def logger
+      writer = Logger.new(STDOUT)
+      writer.formatter = proc do |severity, _, _, msg|
+        "#{severity.upcase}: #{msg}\n"
+      end
+      Herdsman::LogAdapter.new(writer)
+    end
+
+    def herd_members(repos)
+      repos.map do |repo|
+        Herdsman::HerdMember.new(
+          Herdsman::GitRepo.new(env, repo.path),
+          repo.revision,
+        )
+      end
     end
   end
 end

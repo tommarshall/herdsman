@@ -5,23 +5,26 @@ module Herdsman
       @repo     = repo
       @revision = revision
       @name     = args[:name] || default_name
-      @messages = []
+    end
+
+    def gathered?
+      [repo_initialized?,
+       repo_has_zero_unpushed_commits?,
+       repo_has_zero_unpulled_commits?,
+       repo_has_zero_untracked_files?,
+       repo_has_zero_modified_files?,
+       repo_on_specified_revision?].all?
     end
 
     def status_report
-      check_initialized
-      check_for_unpushed_commits
-      check_for_unpulled_commits
-      check_for_untracked_files
-      check_for_modified_files
-      check_current_revision
-      add_ok_message if messages.empty?
+      clear_messages
+      messages << Message.new(:info, "#{name} is ok") if gathered?
       messages
     end
 
     private
 
-    attr_reader :repo, :revision, :messages
+    attr_reader :repo, :revision
 
     def default_name
       File.basename(repo.path)
@@ -29,44 +32,54 @@ module Herdsman
 
     Message = Struct.new(:level, :msg)
 
-    def add_ok_message
-      @messages << Message.new(:info, "#{name} is ok")
+    def messages
+      @messages ||= []
     end
 
-    def check_initialized
+    def clear_messages
+      @messages = []
+    end
+
+    def repo_initialized?
       unless repo.initialized?
-        @messages << Message.new(:warn, "#{repo.path} is not a git repo")
+        messages << Message.new(:warn, "#{repo.path} is not a git repo")
       end
+      repo.initialized?
     end
 
-    def check_for_unpushed_commits
+    def repo_has_zero_unpushed_commits?
       if repo.has_unpushed_commits?
-        @messages << Message.new(:warn, "#{name} has unpushed commits")
+        messages << Message.new(:warn, "#{name} has unpushed commits")
       end
+      !repo.has_unpushed_commits?
     end
 
-    def check_for_unpulled_commits
+    def repo_has_zero_unpulled_commits?
       if repo.has_unpulled_commits?
-        @messages << Message.new(:warn, "#{name} has unpulled commits")
+        messages << Message.new(:warn, "#{name} has unpulled commits")
       end
+      !repo.has_unpulled_commits?
     end
 
-    def check_for_untracked_files
+    def repo_has_zero_untracked_files?
       if repo.has_untracked_files?
-        @messages << Message.new(:warn, "#{name} has untracked files")
+        messages << Message.new(:warn, "#{name} has untracked files")
       end
+      !repo.has_untracked_files?
     end
 
-    def check_for_modified_files
+    def repo_has_zero_modified_files?
       if repo.has_modified_files?
-        @messages << Message.new(:warn, "#{name} has modified files")
+        messages << Message.new(:warn, "#{name} has modified files")
       end
+      !repo.has_modified_files?
     end
 
-    def check_current_revision
+    def repo_on_specified_revision?
       if repo.initialized? && !repo.revision?(revision)
-        @messages << Message.new(:warn, "#{name} revision is not '#{revision}'")
+        messages << Message.new(:warn, "#{name} revision is not '#{revision}'")
       end
+      !repo.initialized? || repo.revision?(revision)
     end
   end
 end

@@ -12,10 +12,11 @@ RSpec.describe '`herdsman status`', type: :aruba do
       stop_all_commands
     end
 
-    it 'reports without warnings' do
+    it 'reports info messages without warnings' do
       output = all_commands.map(&:output).join("\n")
 
       expect(output).to include('INFO: foo.git is ok')
+      expect(output).to_not include('WARN:')
     end
 
     it 'exits without an error code' do
@@ -23,7 +24,7 @@ RSpec.describe '`herdsman status`', type: :aruba do
     end
   end
 
-  context 'when not gathered' do
+  context 'when ungathered' do
     before do
       foo_repo_double = TestGitRepo.new('foo')
       bar_repo_double = TestGitRepo.new('bar')
@@ -48,7 +49,7 @@ RSpec.describe '`herdsman status`', type: :aruba do
       stop_all_commands
     end
 
-    it 'reports with warnings' do
+    it 'reports warnings' do
       output = all_commands.map(&:output).join("\n")
 
       expect(output).to include('WARN: /tmp is not a git repo')

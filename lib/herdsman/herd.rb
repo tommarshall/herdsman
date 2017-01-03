@@ -1,23 +1,18 @@
 module Herdsman
   class Herd
     attr_reader :members
-    def initialize(env, config)
+    def initialize(env, config, members)
       @env = env
       @config = config
-      @members = load_members(config.repos)
+      @members = members
+    end
+
+    def gathered?
+      members.all?(&:gathered?)
     end
 
     private
 
     attr_reader :env
-
-    def load_members(repos)
-      repos.map do |repo|
-        Herdsman::HerdMember.new(
-          Herdsman::GitRepo.new(env, repo.path),
-          repo.revision,
-        )
-      end
-    end
   end
 end

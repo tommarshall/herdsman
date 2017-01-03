@@ -2,20 +2,22 @@ module Herdsman
   module Command
     class Status
       def initialize(args = {})
-        @herd     = args[:herd]
-        @reporter = args[:reporter]
+        @herd   = args[:herd]
+        @logger = args[:logger]
       end
 
       def run
         herd.members.each do |herd_member|
-          reporter.add_messages(herd_member.status_report)
+          herd_member.status_report.each do |message|
+            logger.send(message.level, message.msg)
+          end
         end
-        reporter
+        herd.gathered?
       end
 
       private
 
-      attr_reader :herd, :reporter
+      attr_reader :herd, :logger
     end
   end
 end
