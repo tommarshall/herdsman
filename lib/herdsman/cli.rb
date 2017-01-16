@@ -1,9 +1,10 @@
 require 'thor'
-require 'logger'
 
 module Herdsman
   class CLI < Thor
     require 'herdsman'
+
+    class_option :quiet, type: :boolean, aliases: :q
 
     default_task :status
 
@@ -42,7 +43,9 @@ module Herdsman
       writer.formatter = proc do |severity, _, _, msg|
         "#{severity.upcase}: #{msg}\n"
       end
-      Herdsman::LogAdapter.new(writer)
+      logger = Herdsman::LogAdapter.new(writer)
+      logger.adjust_verbosity(quiet: options[:quiet])
+      logger
     end
 
     def herd_members(repos)

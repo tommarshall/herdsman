@@ -66,6 +66,25 @@ RSpec.describe '`herdsman status`', type: :aruba do
     end
   end
 
+  context '`-q`' do
+    before do
+      repo_double = TestGitRepo.new('bar')
+      repo_double.checkout_branch('foo-feature')
+      write_file 'herdsman.yml', <<-H
+        repos:
+          - #{repo_double.path}
+      H
+      run 'herdsman status -q'
+      stop_all_commands
+    end
+
+    it 'supresses output' do
+      output = all_commands.map(&:output).join("\n")
+
+      expect(output).to eq('')
+    end
+  end
+
   context 'without a herdsman.yml config file' do
     it 'reports and error and exits with an error code' do
       run 'herdsman status'

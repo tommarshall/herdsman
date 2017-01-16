@@ -1,3 +1,4 @@
+require 'logger'
 require 'herdsman/command/status'
 require 'herdsman/config'
 require 'herdsman/environment'

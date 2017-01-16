@@ -1,6 +1,28 @@
 module Herdsman
   class LogAdapter
     attr_accessor :writer
+
+    LOG_LEVELS = {
+      debug: ::Logger::DEBUG,
+      info:  ::Logger::INFO,
+      warn:  ::Logger::WARN,
+      error: ::Logger::ERROR,
+    }.freeze
+
+    def log_level
+      writer.level
+    end
+
+    def log_level=(level)
+      writer.level = LOG_LEVELS.fetch(level)
+    end
+
+    def adjust_verbosity(options = {})
+      if options[:quiet]
+        self.log_level = :error
+      end
+    end
+
     def initialize(writer)
       @writer = writer
     end
