@@ -1,5 +1,7 @@
 # Herdsman
 
+[![Build Status](https://travis-ci.org/tommarshall/herdsman.svg?branch=master)](https://travis-ci.org/tommarshall/herdsman)
+
 Herdsman is a command line utility for working with multiple Git repositories.
 
 ## Installation
