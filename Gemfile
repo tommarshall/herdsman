@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'rake', '~> 12.0'
 gem 'thor', '~> 0.19.0'
 
 group :test do

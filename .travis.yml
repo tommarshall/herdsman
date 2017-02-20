@@ -15,5 +15,4 @@ matrix:
   allow_failures:
     - rvm: ruby-head
   fast_finish: true
-script: bundle exec rspec
 sudo: false
