@@ -23,6 +23,15 @@ describe Herdsman::Config do
         expect(config.repos[0].revision).to eq('a-branch')
       end
     end
+
+    context 'with repositories alias' do
+      it 'returns a list of repo objects' do
+        config = described_class.new(config_fixture_path('repositories-alias'))
+
+        expect(config.repos.is_a?(Array)).to be true
+        expect(config.repos.size).to be(1)
+      end
+    end
   end
 
   context 'with undefined repos' do

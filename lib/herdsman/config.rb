@@ -8,7 +8,7 @@ module Herdsman
     end
 
     def repos
-      config_repos = config['repos'] || []
+      config_repos = config['repos'] || config['repositories'] || []
       config_repos.map do |repo_config|
         RepoConfig.new(repo_config)
       end
