@@ -15,3 +15,21 @@ matrix:
     - rvm: ruby-head
   fast_finish: true
 sudo: false
+
+addons:
+  code_climate:
+    repo_token:
+      secure: "\
+        N7MVm8bjfZJit44K90uY8J6NZr52aRXORXobpIaJe9iTXOJsYYVpQkbaRXZCOYoXVPmrL1\
+        EZge1APTLfbZqOu4J9eO5wSqKdyKBo0Xr1bIRcIPjlNANs9MPjKs0qQBl0CajAS3Yj5vyk\
+        joClcTOXd726YTPcDorx+oORL4QDWB+TQ2Cd26fTJuQk0UHlcfetHdTzmBWw2jC/bURdWN\
+        dk60tx4RH4NcKpe/25IXQrvwgsBddY71mtwOuQl2dYqXtg4riJHVF4V72FBcVfEcBOI44Z\
+        4UMAH56BPKwp9GCXIY/Jj8gdBHwBzd/RaChROTABRejrZpcDH+INO6pzOop2gvMTg64Z2T\
+        +BF+9tcx2vELNkY4yNuA/hTRdAk0bcKBpkBAlUWDSyavpSSVvcnmO/k2kOzxzwlry08YvR\
+        /EF9n4ZT7uNQAhvJvUJAnIvaXkYNMwA2jm44HcT0ccJiPwMBrpXRFd/t2dolZUEUd6Z5vJ\
+        vCkiR2ua62BxA83BE1fawwf6KU+wpvVfPjHnBz4hjdBMFWJ8jl+EXUNc+5WXA4knRgf0CI\
+        753K3tHLZ0heWyOvFu60dVhk8zBMRsY8T13WoVa9wmOJfAaQ8dq4IMcBWfif9qvvHsUMDN\
+        W0C+COeeJ0qTI6SIzC2havFfNLTVSDqH4kG+ysjHRppoeVmv0Oodc=\
+      "
+after_success:
+  - bundle exec codeclimate-test-reporter
