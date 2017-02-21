@@ -1,6 +1,8 @@
 # Herdsman
 
 [![Build Status](https://travis-ci.org/tommarshall/herdsman.svg?branch=master)](https://travis-ci.org/tommarshall/herdsman)
+[![Code Climate](https://codeclimate.com/github/tommarshall/herdsman/badges/gpa.svg)](https://codeclimate.com/github/tommarshall/herdsman)
+[![Test Coverage](https://codeclimate.com/github/tommarshall/herdsman/badges/coverage.svg)](https://codeclimate.com/github/tommarshall/herdsman/coverage)
 
 Herdsman is a command line utility for working with multiple Git repositories.
 
