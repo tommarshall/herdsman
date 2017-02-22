@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'herdsman/config'
+require 'herdsman/repo_config'
 
 describe Herdsman::Config do
   describe '#repos' do
@@ -7,20 +8,7 @@ describe Herdsman::Config do
       it 'returns a list of repo objects' do
         config = described_class.new(config_fixture_path('valid'))
 
-        expect(config.repos.is_a?(Array)).to be true
-        expect(config.repos.size).to be(1)
-      end
-
-      it 'returns objects with path' do
-        config = described_class.new(config_fixture_path('valid'))
-
-        expect(config.repos[0].path).to eq('/tmp')
-      end
-
-      it 'returns objects with revision' do
-        config = described_class.new(config_fixture_path('valid'))
-
-        expect(config.repos[0].revision).to eq('a-branch')
+        expect(config.repos).to all be_a Herdsman::RepoConfig
       end
     end
 
@@ -28,8 +16,7 @@ describe Herdsman::Config do
       it 'returns a list of repo objects' do
         config = described_class.new(config_fixture_path('repositories-alias'))
 
-        expect(config.repos.is_a?(Array)).to be true
-        expect(config.repos.size).to be(1)
+        expect(config.repos).to all be_a Herdsman::RepoConfig
       end
     end
   end

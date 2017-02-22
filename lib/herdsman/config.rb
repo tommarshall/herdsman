@@ -1,4 +1,5 @@
 require 'yaml'
+require 'herdsman/repo_config'
 
 module Herdsman
   class Config
@@ -17,36 +18,6 @@ module Herdsman
     private
 
     attr_reader :config
-
-    class RepoConfig
-      def initialize(repo_config)
-        @repo_config = repo_config
-      end
-
-      def path
-        if repo_config.is_a?(Hash)
-          repo_config['path']
-        else
-          repo_config
-        end
-      end
-
-      def revision
-        if repo_config.is_a?(Hash) && repo_config.include?('revision')
-          repo_config['revision']
-        else
-          default_revision
-        end
-      end
-
-      private
-
-      attr_reader :repo_config
-
-      def default_revision
-        'master'
-      end
-    end
 
     def read_config!(path)
       YAML.load_file(path)
