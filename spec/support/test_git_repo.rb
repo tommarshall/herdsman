@@ -30,8 +30,16 @@ class TestGitRepo
     repo.commit(msg)
   end
 
+  def fetch
+    repo.fetch
+  end
+
   def head_commit_sha
     repo.object('HEAD').sha[0..6]
+  end
+
+  def last_fetched
+    File.mtime(File.join(path, '.git/FETCH_HEAD'))
   end
 
   def push

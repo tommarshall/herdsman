@@ -177,4 +177,22 @@ describe Herdsman::GitRepo do
       expect(repo.revision?('master')).to be false
     end
   end
+
+  describe '#last_fetched' do
+    it 'returns the time it was last fetched' do
+      repo_double = TestGitRepo.new('foo')
+      repo_double.fetch
+      repo = described_class.new(env_double, repo_double.path)
+
+      expect(repo.last_fetched).to be_within(5).of Time.now
+    end
+    context 'when the repo has not been fetched' do
+      it 'returns the epoch' do
+        repo_double = TestGitRepo.new('adsadsad')
+        repo = described_class.new(env_double, repo_double.path)
+
+        expect(repo.last_fetched).to eq Time.at(0)
+      end
+    end
+  end
 end

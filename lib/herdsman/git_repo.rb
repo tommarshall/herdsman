@@ -47,6 +47,12 @@ module Herdsman
       )
     end
 
+    def last_fetched
+      File.mtime(File.join(File.expand_path(path, Dir.pwd), '.git/FETCH_HEAD'))
+    rescue
+      Time.at(0)
+    end
+
     private
 
     attr_reader :env

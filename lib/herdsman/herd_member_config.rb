@@ -17,12 +17,22 @@ module Herdsman
       default_revision
     end
 
+    def fetch_cache
+      args.fetch('fetch_cache').to_i
+    rescue
+      default_fetch_cache
+    end
+
     private
 
     attr_reader :args
 
     def default_revision
       'master'
+    end
+
+    def default_fetch_cache
+      0
     end
 
     def validate!

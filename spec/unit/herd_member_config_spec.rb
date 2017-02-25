@@ -34,6 +34,38 @@ describe Herdsman::HerdMemberConfig do
       expect(herd_member_config.revision).to eq('bar')
     end
   end
+  describe '#fetch_cache' do
+    it 'defaults to 0' do
+      options = { 'path' => '/foo/path' }
+      repo_config = described_class.new(options)
+
+      expect(repo_config.fetch_cache).to eq(0)
+    end
+    context 'with int' do
+      it 'returns the fetch_cache option as an int' do
+        options = { 'path' => '/foo/path', 'fetch_cache' => 300 }
+        repo_config = described_class.new(options)
+
+        expect(repo_config.fetch_cache).to eq(300)
+      end
+    end
+    context 'with float' do
+      it 'returns the fetch_cache option as an int' do
+        options = { 'path' => '/foo/path', 'fetch_cache' => 300.1 }
+        repo_config = described_class.new(options)
+
+        expect(repo_config.fetch_cache).to eq(300)
+      end
+    end
+    context 'with unconvertable format' do
+      it 'returns the default' do
+        options = { 'path' => '/foo/path', 'fetch_cache' => true }
+        repo_config = described_class.new(options)
+
+        expect(repo_config.fetch_cache).to eq(0)
+      end
+    end
+  end
   context 'with no options' do
     it 'raises an exception' do
       expect { described_class.new }.to raise_error(RuntimeError)
