@@ -40,6 +40,12 @@ module Herdsman
       @messages = []
     end
 
+    def repo_fetch!
+      repo.fetch!
+    rescue
+      messages << Message.new(:warn, "#{name} failed to fetch")
+    end
+
     def repo_initialized?
       unless repo.initialized?
         messages << Message.new(:warn, "#{repo.path} is not a git repo")
@@ -55,6 +61,7 @@ module Herdsman
     end
 
     def repo_has_zero_unpulled_commits?
+      repo_fetch!
       if repo.has_unpulled_commits?
         messages << Message.new(:warn, "#{name} has unpulled commits")
       end

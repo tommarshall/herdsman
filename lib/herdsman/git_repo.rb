@@ -16,6 +16,11 @@ module Herdsman
       git_output('rev-parse --git-dir')
     end
 
+    def fetch!
+      _, _, proc_status = git_command('fetch --all')
+      raise 'Fetch failed' unless proc_status.exitstatus.zero?
+    end
+
     def current_head
       current_branch_name || current_tag_name || abbreviated_commit_ref
     end
@@ -33,7 +38,6 @@ module Herdsman
     end
 
     def has_unpulled_commits?
-      fetch
       git_output('log --oneline ..@{u}').lines.any?
     end
 
@@ -66,18 +70,14 @@ module Herdsman
       StatusParser.new(git_output('status --porcelain'))
     end
 
-    def fetch
-      git_output('fetch --all')
-    end
-
     def git_output(command)
-      Dir.chdir(File.expand_path(path, Dir.pwd)) do
-        Open3.capture3(git_command(command)).first.chomp
-      end
+      git_command(command).first.chomp
     end
 
-    def git_command(sub_command)
-      "#{env.git_command} #{sub_command}"
+    def git_command(command)
+      Dir.chdir(File.expand_path(path, Dir.pwd)) do
+        Open3.capture3("#{env.git_command} #{command}")
+      end
     end
 
     class StatusParser

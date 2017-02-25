@@ -34,6 +34,20 @@ describe Herdsman::GitRepo do
     end
   end
 
+  describe '#fetch!' do
+    it 'does not raise an exception when fetch succeeds' do
+      repo_double = TestGitRepo.new('foo')
+      repo = described_class.new(env_double, repo_double.path)
+
+      expect { repo.fetch! }.to_not raise_error
+    end
+    it 'raises and exception when fetch fails' do
+      repo = described_class.new(env_double, '/tmp')
+
+      expect { repo.fetch! }.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#current_head' do
     it 'returns the name of the current git branch' do
       repo_double = TestGitRepo.new('foo')

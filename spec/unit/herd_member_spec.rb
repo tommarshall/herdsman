@@ -6,6 +6,7 @@ describe Herdsman::HerdMember do
     double(
       path: '/tmp/foo.git',
       initialized?: true,
+      fetch!: nil,
       has_unpushed_commits?: false,
       has_unpulled_commits?: false,
       has_untracked_files?: false,
@@ -17,6 +18,7 @@ describe Herdsman::HerdMember do
     double(
       path: '/tmp/foo.git',
       initialized?: true,
+      fetch!: nil,
       has_unpushed_commits?: true,
       has_unpulled_commits?: true,
       has_untracked_files?: true,
@@ -48,6 +50,12 @@ describe Herdsman::HerdMember do
       herd_member = described_class.new(ungathered_repo, 'master')
 
       expect(herd_member).to_not be_gathered
+    end
+    it 'calls `repo.fetch!`' do
+      herd_member = described_class.new(gathered_repo, 'master')
+
+      expect(gathered_repo).to receive(:fetch!)
+      herd_member.gathered?
     end
   end
 
@@ -82,13 +90,16 @@ describe Herdsman::HerdMember do
         )
       end
       it 'returns a warning message' do
+        allow(uninitialized_repo).to receive(:fetch!).and_raise('Fetch failed')
         herd_member = described_class.new(uninitialized_repo, 'master')
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
-        expect(status_report.size).to be 1
+        expect(status_report.size).to be 2
         expect(status_report[0].level).to eq :warn
         expect(status_report[0].msg).to include 'not a git repo'
+        expect(status_report[1].level).to eq :warn
+        expect(status_report[1].msg).to include 'failed to fetch'
       end
     end
     context 'when the repo has unpushed commits' do
@@ -96,6 +107,7 @@ describe Herdsman::HerdMember do
         double(
           path: '/tmp/foo.git',
           initialized?: true,
+          fetch!: nil,
           has_unpushed_commits?: true,
           has_unpulled_commits?: false,
           has_untracked_files?: false,
@@ -118,6 +130,7 @@ describe Herdsman::HerdMember do
         double(
           path: '/tmp/foo.git',
           initialized?: true,
+          fetch!: nil,
           has_unpushed_commits?: false,
           has_unpulled_commits?: true,
           has_untracked_files?: false,
@@ -140,6 +153,7 @@ describe Herdsman::HerdMember do
         double(
           path: '/tmp/foo.git',
           initialized?: true,
+          fetch!: nil,
           has_unpushed_commits?: false,
           has_unpulled_commits?: false,
           has_untracked_files?: true,
@@ -162,6 +176,7 @@ describe Herdsman::HerdMember do
         double(
           path: '/tmp/foo.git',
           initialized?: true,
+          fetch!: nil,
           has_unpushed_commits?: false,
           has_unpulled_commits?: false,
           has_untracked_files?: false,
@@ -184,6 +199,7 @@ describe Herdsman::HerdMember do
         double(
           path: '/tmp/foo.git',
           initialized?: true,
+          fetch!: nil,
           has_unpushed_commits?: false,
           has_unpulled_commits?: false,
           has_untracked_files?: false,
