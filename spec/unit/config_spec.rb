@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'herdsman/config'
-require 'herdsman/repo_config'
+require 'herdsman/herd_member_config'
 
 describe Herdsman::Config do
   describe '#repos' do
@@ -8,7 +8,7 @@ describe Herdsman::Config do
       it 'returns a list of repo objects' do
         config = described_class.new(config_fixture_path('valid'))
 
-        expect(config.repos).to all be_a Herdsman::RepoConfig
+        expect(config.repos).to all be_a Herdsman::HerdMemberConfig
       end
     end
 
@@ -16,7 +16,7 @@ describe Herdsman::Config do
       it 'returns a list of repo objects' do
         config = described_class.new(config_fixture_path('repositories-alias'))
 
-        expect(config.repos).to all be_a Herdsman::RepoConfig
+        expect(config.repos).to all be_a Herdsman::HerdMemberConfig
       end
     end
   end

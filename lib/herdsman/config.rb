@@ -1,5 +1,5 @@
 require 'yaml'
-require 'herdsman/repo_config'
+require 'herdsman/herd_member_config'
 
 module Herdsman
   class Config
@@ -10,8 +10,8 @@ module Herdsman
 
     def repos
       config_repos = config['repos'] || config['repositories'] || []
-      config_repos.map do |repo_config|
-        RepoConfig.new(repo_config)
+      config_repos.map do |herd_member_config|
+        HerdMemberConfig.new(herd_member_config)
       end
     end
 

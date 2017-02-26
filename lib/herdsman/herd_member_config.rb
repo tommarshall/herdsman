@@ -1,5 +1,5 @@
 module Herdsman
-  class RepoConfig
+  class HerdMemberConfig
     def initialize(args = {})
       @args = args
       validate!
