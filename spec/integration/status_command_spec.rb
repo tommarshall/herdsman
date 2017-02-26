@@ -66,7 +66,7 @@ RSpec.describe '`herdsman status`', type: :aruba do
     end
   end
 
-  context '`-q`' do
+  context '`--quiet`' do
     before do
       repo_double = TestGitRepo.new('bar')
       repo_double.checkout_branch('foo-feature')
@@ -74,7 +74,7 @@ RSpec.describe '`herdsman status`', type: :aruba do
         repos:
           - #{repo_double.path}
       H
-      run 'herdsman status -q'
+      run 'herdsman status --quiet'
       stop_all_commands
     end
 
