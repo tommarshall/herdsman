@@ -1,10 +1,8 @@
 module Herdsman
   class HerdMember
-    attr_reader :name
-    def initialize(repo, config, args = {})
-      @repo        = repo
-      @config      = config
-      @name        = args[:name] || default_name
+    def initialize(repo, config)
+      @repo   = repo
+      @config = config
     end
 
     def gathered?
@@ -26,10 +24,6 @@ module Herdsman
 
     attr_reader :repo, :config
 
-    def default_name
-      File.basename(repo.path)
-    end
-
     Message = Struct.new(:level, :msg)
 
     def messages
@@ -38,6 +32,10 @@ module Herdsman
 
     def clear_messages
       @messages = []
+    end
+
+    def name
+      config.name
     end
 
     def revision

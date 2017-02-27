@@ -29,20 +29,7 @@ describe Herdsman::HerdMember do
     )
   end
   let(:config) do
-    double(revision: 'master', fetch_cache: 0)
-  end
-
-  describe '#name' do
-    it 'returns the directory name when no name set' do
-      herd_member = described_class.new(gathered_repo, config)
-
-      expect(herd_member.name).to eq 'foo.git'
-    end
-    it 'returns the assigned name when a name is set' do
-      herd_member = described_class.new(gathered_repo, config, name: 'bar')
-
-      expect(herd_member.name).to eq 'bar'
-    end
+    double(name: 'foo', revision: 'master', fetch_cache: 0)
   end
 
   describe '#gathered?' do
