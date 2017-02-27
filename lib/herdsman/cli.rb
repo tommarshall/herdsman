@@ -49,11 +49,10 @@ module Herdsman
     end
 
     def herd_members(repos)
-      repos.map do |repo|
+      repos.map do |herd_member_config|
         Herdsman::HerdMember.new(
-          Herdsman::GitRepo.new(env, repo.path),
-          repo.revision,
-          repo.fetch_cache,
+          Herdsman::GitRepo.new(env, herd_member_config.path),
+          herd_member_config,
         )
       end
     end

@@ -28,15 +28,18 @@ describe Herdsman::HerdMember do
       last_fetched: Time.now,
     )
   end
+  let(:config) do
+    double(revision: 'master', fetch_cache: 0)
+  end
 
   describe '#name' do
     it 'returns the directory name when no name set' do
-      herd_member = described_class.new(gathered_repo, 'master', 0)
+      herd_member = described_class.new(gathered_repo, config)
 
       expect(herd_member.name).to eq 'foo.git'
     end
     it 'returns the assigned name when a name is set' do
-      herd_member = described_class.new(gathered_repo, 'master', 0, name: 'bar')
+      herd_member = described_class.new(gathered_repo, config, name: 'bar')
 
       expect(herd_member.name).to eq 'bar'
     end
@@ -44,18 +47,19 @@ describe Herdsman::HerdMember do
 
   describe '#gathered?' do
     it 'returns true when gathered' do
-      herd_member = described_class.new(gathered_repo, 'master', 0)
+      herd_member = described_class.new(gathered_repo, config)
 
       expect(herd_member).to be_gathered
     end
     it 'returns false when ungathered' do
-      herd_member = described_class.new(ungathered_repo, 'master', 0)
+      herd_member = described_class.new(ungathered_repo, config)
 
       expect(herd_member).to_not be_gathered
     end
     context 'with a valid fetch cache' do
       it 'does not call `repo.fetch!`' do
-        herd_member = described_class.new(gathered_repo, 'master', 300)
+        cached_config = double(name: 'foo', revision: 'bar', fetch_cache: 300)
+        herd_member = described_class.new(gathered_repo, cached_config)
 
         expect(gathered_repo).to_not receive(:fetch!)
         herd_member.gathered?
@@ -63,7 +67,7 @@ describe Herdsman::HerdMember do
     end
     context 'with an invalid fetch cache' do
       it 'calls `repo.fetch!`' do
-        herd_member = described_class.new(gathered_repo, 'master', 0)
+        herd_member = described_class.new(gathered_repo, config)
 
         expect(gathered_repo).to receive(:fetch!)
         herd_member.gathered?
@@ -73,7 +77,7 @@ describe Herdsman::HerdMember do
 
   describe '#status_report' do
     it 'does not include any previous messages' do
-      herd_member = described_class.new(ungathered_repo, 'master', 0)
+      herd_member = described_class.new(ungathered_repo, config)
       status_report_first_size  = herd_member.status_report.size
       status_report_second_size = herd_member.status_report.size
 
@@ -81,7 +85,7 @@ describe Herdsman::HerdMember do
     end
     context 'when gathered' do
       it 'returns an array of info messages' do
-        herd_member = described_class.new(gathered_repo, 'master', 0)
+        herd_member = described_class.new(gathered_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
@@ -104,7 +108,7 @@ describe Herdsman::HerdMember do
       end
       it 'returns a warning message' do
         allow(uninitialized_repo).to receive(:fetch!).and_raise('Fetch failed')
-        herd_member = described_class.new(uninitialized_repo, 'master', 0)
+        herd_member = described_class.new(uninitialized_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
@@ -130,7 +134,7 @@ describe Herdsman::HerdMember do
         )
       end
       it 'returns a warning message' do
-        herd_member = described_class.new(unpushed_repo, 'master', 0)
+        herd_member = described_class.new(unpushed_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
@@ -154,7 +158,7 @@ describe Herdsman::HerdMember do
         )
       end
       it 'returns a warning message' do
-        herd_member = described_class.new(unpulled_repo, 'master', 0)
+        herd_member = described_class.new(unpulled_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
@@ -178,7 +182,7 @@ describe Herdsman::HerdMember do
         )
       end
       it 'returns a warning message' do
-        herd_member = described_class.new(untracked_files_repo, 'master', 0)
+        herd_member = described_class.new(untracked_files_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
@@ -202,7 +206,7 @@ describe Herdsman::HerdMember do
         )
       end
       it 'returns a warning message' do
-        herd_member = described_class.new(modified_files_repo, 'master', 0)
+        herd_member = described_class.new(modified_files_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
@@ -226,7 +230,7 @@ describe Herdsman::HerdMember do
         )
       end
       it 'returns a warning message' do
-        herd_member = described_class.new(incorrect_revision_repo, 'master', 0)
+        herd_member = described_class.new(incorrect_revision_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
@@ -237,7 +241,7 @@ describe Herdsman::HerdMember do
     end
     context 'when ungathered' do
       it 'returns an array of warning messages' do
-        herd_member = described_class.new(ungathered_repo, 'master', 0)
+        herd_member = described_class.new(ungathered_repo, config)
         status_report = herd_member.status_report
 
         expect(status_report.is_a?(Array)).to be true
