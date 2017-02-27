@@ -11,6 +11,12 @@ module Herdsman
       args
     end
 
+    def name
+      args.fetch('name')
+    rescue
+      default_name
+    end
+
     def revision
       args.fetch('revision')
     rescue
@@ -26,6 +32,10 @@ module Herdsman
     private
 
     attr_reader :args
+
+    def default_name
+      File.basename(path)
+    end
 
     def default_revision
       'master'
