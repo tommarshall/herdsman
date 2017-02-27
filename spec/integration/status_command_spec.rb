@@ -66,6 +66,48 @@ RSpec.describe '`herdsman status`', type: :aruba do
     end
   end
 
+  context 'with a valid fetch cache' do
+    it 'does not fetch the cached repos' do
+      repo_double = TestGitRepo.new('valid-cache')
+      repo_double.fetch
+      write_file 'herdsman.yml', <<-H
+        repos:
+          - path: #{repo_double.path}
+            fetch_cache: 300
+      H
+      run 'herdsman status'
+      stop_all_commands
+      initial_last_fetched = repo_double.last_fetched
+      sleep 1
+      run 'herdsman status'
+      stop_all_commands
+      second_last_fetched = repo_double.last_fetched
+
+      expect(initial_last_fetched).to eq(second_last_fetched)
+    end
+  end
+
+  context 'with an invalid fetch cache' do
+    it 'fetches the cached repos' do
+      repo_double = TestGitRepo.new('invalid-cache')
+      repo_double.fetch
+      write_file 'herdsman.yml', <<-H
+        repos:
+          - path: #{repo_double.path}
+            fetch_cache: 0
+      H
+      run 'herdsman status'
+      stop_all_commands
+      initial_last_fetched = repo_double.last_fetched
+      sleep 1
+      run 'herdsman status'
+      stop_all_commands
+      second_last_fetched = repo_double.last_fetched
+
+      expect(initial_last_fetched).to be < second_last_fetched
+    end
+  end
+
   context '`--quiet`' do
     before do
       repo_double = TestGitRepo.new('bar')

@@ -53,6 +53,7 @@ module Herdsman
         Herdsman::HerdMember.new(
           Herdsman::GitRepo.new(env, repo.path),
           repo.revision,
+          repo.fetch_cache,
         )
       end
     end

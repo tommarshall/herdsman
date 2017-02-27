@@ -1,10 +1,11 @@
 module Herdsman
   class HerdMember
     attr_reader :name
-    def initialize(repo, revision, args = {})
-      @repo     = repo
-      @revision = revision
-      @name     = args[:name] || default_name
+    def initialize(repo, revision, fetch_cache, args = {})
+      @repo        = repo
+      @revision    = revision
+      @fetch_cache = fetch_cache
+      @name        = args[:name] || default_name
     end
 
     def gathered?
@@ -24,7 +25,7 @@ module Herdsman
 
     private
 
-    attr_reader :repo, :revision
+    attr_reader :repo, :revision, :fetch_cache
 
     def default_name
       File.basename(repo.path)
@@ -38,6 +39,16 @@ module Herdsman
 
     def clear_messages
       @messages = []
+    end
+
+    def fetch_cached?
+      Time.now - repo.last_fetched < fetch_cache
+    end
+
+    def repo_fetch!
+      repo.fetch!
+    rescue
+      messages << Message.new(:warn, "#{name} failed to fetch")
     end
 
     def repo_initialized?
@@ -55,6 +66,7 @@ module Herdsman
     end
 
     def repo_has_zero_unpulled_commits?
+      repo_fetch! unless fetch_cached?
       if repo.has_unpulled_commits?
         messages << Message.new(:warn, "#{name} has unpulled commits")
       end

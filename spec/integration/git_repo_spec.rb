@@ -34,6 +34,20 @@ describe Herdsman::GitRepo do
     end
   end
 
+  describe '#fetch!' do
+    it 'does not raise an exception when fetch succeeds' do
+      repo_double = TestGitRepo.new('foo')
+      repo = described_class.new(env_double, repo_double.path)
+
+      expect { repo.fetch! }.to_not raise_error
+    end
+    it 'raises and exception when fetch fails' do
+      repo = described_class.new(env_double, '/tmp')
+
+      expect { repo.fetch! }.to raise_error(RuntimeError)
+    end
+  end
+
   describe '#current_head' do
     it 'returns the name of the current git branch' do
       repo_double = TestGitRepo.new('foo')
@@ -161,6 +175,24 @@ describe Herdsman::GitRepo do
     it 'returns false in an uninitialized repository' do
       repo = described_class.new(env_double, '/tmp')
       expect(repo.revision?('master')).to be false
+    end
+  end
+
+  describe '#last_fetched' do
+    it 'returns the time it was last fetched' do
+      repo_double = TestGitRepo.new('foo')
+      repo_double.fetch
+      repo = described_class.new(env_double, repo_double.path)
+
+      expect(repo.last_fetched).to be_within(5).of Time.now
+    end
+    context 'when the repo has not been fetched' do
+      it 'returns the epoch' do
+        repo_double = TestGitRepo.new('adsadsad')
+        repo = described_class.new(env_double, repo_double.path)
+
+        expect(repo.last_fetched).to eq Time.at(0)
+      end
     end
   end
 end

@@ -1,0 +1,9 @@
+repos:
+  - name: foo
+    path: .
+    fetch_cache: 10
+  - path: /Users/tom/work/github/git-good-commit
+    revision: foo
+    name: bar
+  - /Users/tom/work/bang/ansible/web-hosts
+  # - /not-a-dir
