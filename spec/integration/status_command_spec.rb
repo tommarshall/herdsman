@@ -41,7 +41,8 @@ RSpec.describe '`herdsman status`', type: :aruba do
       write_file 'herdsman.yml', <<-H
         repos:
           - /tmp
-          - path: #{foo_repo_double.path}
+          - name: 'Foo repo'
+            path: #{foo_repo_double.path}
             revision: 'baz-revision'
           - #{bar_repo_double.path}
       H
@@ -53,11 +54,11 @@ RSpec.describe '`herdsman status`', type: :aruba do
       output = all_commands.map(&:output).join("\n")
 
       expect(output).to include('WARN: /tmp is not a git repo')
-      expect(output).to include("WARN: foo.git revision is not 'baz-revision'")
-      expect(output).to include('WARN: foo.git has unpushed commits')
-      expect(output).to include('WARN: foo.git has unpulled commits')
-      expect(output).to include('WARN: foo.git has untracked files')
-      expect(output).to include('WARN: foo.git has modified files')
+      expect(output).to include("WARN: Foo repo revision is not 'baz-revision'")
+      expect(output).to include('WARN: Foo repo has unpushed commits')
+      expect(output).to include('WARN: Foo repo has unpulled commits')
+      expect(output).to include('WARN: Foo repo has untracked files')
+      expect(output).to include('WARN: Foo repo has modified files')
       expect(output).to include("WARN: bar.git revision is not 'master'")
     end
 

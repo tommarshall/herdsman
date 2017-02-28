@@ -1,11 +1,8 @@
 module Herdsman
   class HerdMember
-    attr_reader :name
-    def initialize(repo, revision, fetch_cache, args = {})
-      @repo        = repo
-      @revision    = revision
-      @fetch_cache = fetch_cache
-      @name        = args[:name] || default_name
+    def initialize(repo, config)
+      @repo   = repo
+      @config = config
     end
 
     def gathered?
@@ -25,11 +22,7 @@ module Herdsman
 
     private
 
-    attr_reader :repo, :revision, :fetch_cache
-
-    def default_name
-      File.basename(repo.path)
-    end
+    attr_reader :repo, :config
 
     Message = Struct.new(:level, :msg)
 
@@ -39,6 +32,18 @@ module Herdsman
 
     def clear_messages
       @messages = []
+    end
+
+    def name
+      config.name
+    end
+
+    def revision
+      config.revision
+    end
+
+    def fetch_cache
+      config.fetch_cache
     end
 
     def fetch_cached?

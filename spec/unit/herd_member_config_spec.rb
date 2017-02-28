@@ -20,6 +20,20 @@ describe Herdsman::HerdMemberConfig do
       end
     end
   end
+  describe '#name' do
+    it 'defaults to the directory name' do
+      options = { 'path' => '/foo/path' }
+      herd_member_config = described_class.new(options)
+
+      expect(herd_member_config.name).to eq 'path'
+    end
+    it 'returns the name option' do
+      options = { 'path' => '/foo/path', 'name' => 'bar' }
+      herd_member_config = described_class.new(options)
+
+      expect(herd_member_config.name).to eq 'bar'
+    end
+  end
   describe '#revision' do
     it 'defaults to master' do
       options = { 'path' => '/foo/path' }

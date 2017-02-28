@@ -57,6 +57,7 @@ repos:
   - /path/to/foo-repo
   - ../../path/to/bar-repo
   - path: /path/to/baz-repo
+    name: 'Baz repo'        # defaults to basename of path if unset, i.e. `baz-repo`
     revision: qux-branch    # defaults to `master` if unset
     fetch_cache: 300        # in seconds, defaults to `0` if unset
 ```
