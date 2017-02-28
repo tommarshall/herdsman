@@ -11,3 +11,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `repositories:` alias for `repos:`.
 * Optional `fetch_cache:` property to `repos:` config.
 * Optional `name:` property to `repos:` config.
+
+
+[Unreleased]: https://github.com/tommarshall/herdsman/compare/v0.1.0...HEAD
