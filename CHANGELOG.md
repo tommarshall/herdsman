@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [v0.2.0] - 2017-03-01
 
 ### Added
 
@@ -21,4 +21,5 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `version` command.
 * `--quiet`/`-q` option.
 
-[Unreleased]: https://github.com/tommarshall/herdsman/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/tommarshall/herdsman/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/tommarshall/herdsman/compare/v0.1.0...v0.2.0
