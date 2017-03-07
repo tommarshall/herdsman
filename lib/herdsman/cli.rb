@@ -4,6 +4,7 @@ module Herdsman
   class CLI < Thor
     require 'herdsman'
 
+    class_option :fetch_cache, type: :numeric, banner: 'SECONDS', aliases: :c
     class_option :quiet, type: :boolean, aliases: :q
 
     default_task :status
@@ -24,10 +25,15 @@ module Herdsman
     private
 
     def config
-      Herdsman::Config.new(File.expand_path('herdsman.yml', Dir.pwd))
+      path = File.expand_path('herdsman.yml', Dir.pwd)
+      Herdsman::Config.new(path, config_overrides)
     rescue
       $stderr.puts "ERROR: #{$!.message}"
       exit 1
+    end
+
+    def config_overrides
+      options.select { |key, _| %w(fetch_cache).include? key }
     end
 
     def env

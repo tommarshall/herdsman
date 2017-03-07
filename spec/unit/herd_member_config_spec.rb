@@ -79,6 +79,15 @@ describe Herdsman::HerdMemberConfig do
         expect(repo_config.fetch_cache).to eq(0)
       end
     end
+    context 'with override' do
+      it 'returns the override value' do
+        args = { 'path' => '/foo/path', 'fetch_cache' => 0 }
+        overrides = { 'fetch_cache' => 300 }
+        repo_config = described_class.new(args, overrides)
+
+        expect(repo_config.fetch_cache).to eq(300)
+      end
+    end
   end
   context 'with no args' do
     it 'raises an exception' do

@@ -21,6 +21,17 @@ describe Herdsman::Config do
     end
   end
 
+  context 'with overrides' do
+    it 'passes the overrides to HerdMemberConfig' do
+      args = { 'path' => '/tmp', 'revision' => 'a-branch' }
+      overrides = { fetch_cache: 300 }
+      config = described_class.new(config_fixture_path('valid'), overrides)
+
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(args, overrides)
+      config.repos
+    end
+  end
+
   context 'with undefined repos' do
     it 'raises an exception' do
       expected = expect do
