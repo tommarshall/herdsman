@@ -19,7 +19,7 @@ module Herdsman
     end
 
     def revision
-      args.fetch('revision')
+      overridable_arg('revision')
     rescue
       default_revision
     end
