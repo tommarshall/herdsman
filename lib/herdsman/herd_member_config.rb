@@ -1,7 +1,7 @@
 module Herdsman
   class HerdMemberConfig
     def initialize(args = {}, overrides = {})
-      @args = args
+      @args      = args
       @overrides = overrides
       validate!
     end
