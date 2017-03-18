@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * `--fetch-cache=SECONDS`/`-c` option.
 * `--revision`/`-r` option.
+* `defaults:` config with support for `revision:` and `fetch_cache:`.
 
 ## [v0.2.0] - 2017-03-01
 

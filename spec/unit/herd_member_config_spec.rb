@@ -56,6 +56,22 @@ describe Herdsman::HerdMemberConfig do
         expect(repo_config.revision).to eq('foo-revision')
       end
     end
+    context 'with default' do
+      it 'favours the arg value' do
+        args = { 'path' => '/foo/path', 'revision' => 'foo' }
+        defaults = { 'revision' => 'bar' }
+        herd_member_config = described_class.new(args, {}, defaults)
+
+        expect(herd_member_config.revision).to eq('foo')
+      end
+      it 'returns the specified value if no arg provided' do
+        args = { 'path' => '/foo/path' }
+        defaults = { 'revision' => 'bar' }
+        herd_member_config = described_class.new(args, {}, defaults)
+
+        expect(herd_member_config.revision).to eq('bar')
+      end
+    end
   end
   describe '#fetch_cache' do
     it 'defaults to 0' do
@@ -95,6 +111,22 @@ describe Herdsman::HerdMemberConfig do
         repo_config = described_class.new(args, overrides)
 
         expect(repo_config.fetch_cache).to eq(300)
+      end
+    end
+    context 'with default' do
+      it 'favours the arg value' do
+        args = { 'path' => '/foo/path', 'fetch_cache' => 300 }
+        defaults = { 'fetch_cache' => 100 }
+        herd_member_config = described_class.new(args, {}, defaults)
+
+        expect(herd_member_config.fetch_cache).to eq(300)
+      end
+      it 'returns the specified value if no arg provided' do
+        args = { 'path' => '/foo/path' }
+        defaults = { 'fetch_cache' => 100 }
+        herd_member_config = described_class.new(args, {}, defaults)
+
+        expect(herd_member_config.fetch_cache).to eq(100)
       end
     end
   end
