@@ -22,6 +22,7 @@ Commands:
   herdsman version         # Show the herdsman version
 
 Options:
+  c, [--fetch-cache=SECONDS]
   q, [--quiet], [--no-quiet]
 ```
 

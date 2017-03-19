@@ -3,21 +3,22 @@ require 'herdsman/herd_member_config'
 
 module Herdsman
   class Config
-    def initialize(path)
-      @config = read_config!(path)
+    def initialize(path, overrides = {})
+      @config    = read_config!(path)
+      @overrides = overrides
       validate!
     end
 
     def repos
       config_repos = config['repos'] || config['repositories'] || []
       config_repos.map do |herd_member_config|
-        HerdMemberConfig.new(herd_member_config)
+        HerdMemberConfig.new(herd_member_config, overrides)
       end
     end
 
     private
 
-    attr_reader :config
+    attr_reader :config, :overrides
 
     def read_config!(path)
       YAML.load_file(path)

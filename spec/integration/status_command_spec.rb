@@ -128,6 +128,29 @@ RSpec.describe '`herdsman status`', type: :aruba do
     end
   end
 
+  context '`--fetch-cache`' do
+    it 'takes precedence over the config file' do
+      repo_double = TestGitRepo.new('invalid-cache')
+      repo_double.fetch
+      write_file 'herdsman.yml', <<-H
+        repos:
+          - path: #{repo_double.path}
+            fetch_cache: 0
+      H
+      run 'herdsman status'
+      stop_all_commands
+      initial_last_fetched = repo_double.last_fetched
+      sleep 1
+      run 'herdsman status --fetch-cache=300'
+      stop_all_commands
+      second_last_fetched = repo_double.last_fetched
+      output = all_commands.map(&:output).join("\n")
+
+      expect(output).to_not include('ERROR')
+      expect(initial_last_fetched).to eq(second_last_fetched)
+    end
+  end
+
   context 'without a herdsman.yml config file' do
     it 'reports and error and exits with an error code' do
       run 'herdsman status'

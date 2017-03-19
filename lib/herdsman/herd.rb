@@ -2,8 +2,8 @@ module Herdsman
   class Herd
     attr_reader :members
     def initialize(env, config, members)
-      @env = env
-      @config = config
+      @env     = env
+      @config  = config
       @members = members
     end
 

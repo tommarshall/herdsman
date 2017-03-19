@@ -5,7 +5,7 @@ require 'herdsman/herd_member_config'
 describe Herdsman::Config do
   describe '#repos' do
     context 'with repos' do
-      it 'returns a list of repo objects' do
+      it 'returns a list of HerdMemberConfig objects' do
         config = described_class.new(config_fixture_path('valid'))
 
         expect(config.repos).to all be_a Herdsman::HerdMemberConfig
@@ -13,11 +13,22 @@ describe Herdsman::Config do
     end
 
     context 'with repositories alias' do
-      it 'returns a list of repo objects' do
+      it 'returns a list of HerdMemberConfig objects' do
         config = described_class.new(config_fixture_path('repositories-alias'))
 
         expect(config.repos).to all be_a Herdsman::HerdMemberConfig
       end
+    end
+  end
+
+  context 'with overrides' do
+    it 'passes the overrides to HerdMemberConfig' do
+      args = { 'path' => '/tmp', 'revision' => 'a-branch' }
+      overrides = { fetch_cache: 300 }
+      config = described_class.new(config_fixture_path('valid'), overrides)
+
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(args, overrides)
+      config.repos
     end
   end
 
