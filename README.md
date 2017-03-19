@@ -55,6 +55,10 @@ Configure the herd of repositories to manage with a `herdsman.yml` file in the c
 Example:
 
 ```yml
+defaults:
+  revision: not-master
+  fetch_cache: 300
+
 repos:
   - /path/to/foo-repo
   - ../../path/to/bar-repo

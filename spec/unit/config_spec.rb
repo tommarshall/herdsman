@@ -27,7 +27,20 @@ describe Herdsman::Config do
       overrides = { fetch_cache: 300 }
       config = described_class.new(config_fixture_path('valid'), overrides)
 
-      expect(Herdsman::HerdMemberConfig).to receive(:new).with(args, overrides)
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(args, overrides,
+                                                               {})
+      config.repos
+    end
+  end
+
+  context 'with defaults' do
+    it 'passes the defaults to HerdMemberConfig' do
+      config = described_class.new(config_fixture_path('defaults'))
+      args = { 'path' => '/tmp', 'revision' => 'a-branch' }
+      defaults = { 'revision' => 'a-tag', 'fetch_cache' => 300 }
+
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(args, {},
+                                                               defaults)
       config.repos
     end
   end

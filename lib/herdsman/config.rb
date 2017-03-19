@@ -11,8 +11,9 @@ module Herdsman
 
     def repos
       config_repos = config['repos'] || config['repositories'] || []
+      defaults = config['defaults'] || {}
       config_repos.map do |herd_member_config|
-        HerdMemberConfig.new(herd_member_config, overrides)
+        HerdMemberConfig.new(herd_member_config, overrides, defaults)
       end
     end
 

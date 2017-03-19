@@ -1,0 +1,7 @@
+defaults:
+  revision: a-tag
+  fetch_cache: 300
+
+repos:
+  - path: /tmp
+    revision: a-branch

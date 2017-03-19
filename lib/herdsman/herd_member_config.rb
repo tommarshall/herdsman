@@ -1,8 +1,9 @@
 module Herdsman
   class HerdMemberConfig
-    def initialize(args = {}, overrides = {})
+    def initialize(args = {}, overrides = {}, defaults = {})
       @args      = args
       @overrides = overrides
+      @defaults  = defaults
       validate!
     end
 
@@ -32,18 +33,24 @@ module Herdsman
 
     private
 
-    attr_reader :args, :overrides
+    attr_reader :args, :overrides, :defaults
 
     def default_name
       File.basename(path)
     end
 
     def default_revision
-      'master'
+      overridable_default('revision', 'master')
     end
 
     def default_fetch_cache
-      0
+      overridable_default('fetch_cache', 0)
+    end
+
+    def overridable_default(arg, default)
+      defaults.fetch(arg)
+    rescue
+      default
     end
 
     def overridable_arg(arg)
