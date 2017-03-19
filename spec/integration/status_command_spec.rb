@@ -151,6 +151,22 @@ RSpec.describe '`herdsman status`', type: :aruba do
     end
   end
 
+  context '`--revision`' do
+    it 'takes precedence over the config file' do
+      repo_double = TestGitRepo.new('foo')
+      write_file 'herdsman.yml', <<-H
+        repos:
+          - path: #{repo_double.path}
+            revision: master
+      H
+      run 'herdsman status --revision foo-revision'
+      stop_all_commands
+      output = all_commands.map(&:output).join("\n")
+
+      expect(output).to include("WARN: foo.git revision is not 'foo-revision'")
+    end
+  end
+
   context 'without a herdsman.yml config file' do
     it 'reports and error and exits with an error code' do
       run 'herdsman status'

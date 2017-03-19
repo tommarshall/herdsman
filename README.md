@@ -23,6 +23,7 @@ Commands:
 
 Options:
   c, [--fetch-cache=SECONDS]
+  r, [--revision=REVISION]
   q, [--quiet], [--no-quiet]
 ```
 

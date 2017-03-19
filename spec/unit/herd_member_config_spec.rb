@@ -47,6 +47,15 @@ describe Herdsman::HerdMemberConfig do
 
       expect(herd_member_config.revision).to eq('bar')
     end
+    context 'with override' do
+      it 'returns the override value' do
+        args = { 'path' => '/foo/path', 'revision' => 'master' }
+        overrides = { 'revision' => 'foo-revision' }
+        repo_config = described_class.new(args, overrides)
+
+        expect(repo_config.revision).to eq('foo-revision')
+      end
+    end
   end
   describe '#fetch_cache' do
     it 'defaults to 0' do

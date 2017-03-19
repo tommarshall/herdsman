@@ -5,6 +5,7 @@ module Herdsman
     require 'herdsman'
 
     class_option :fetch_cache, type: :numeric, banner: 'SECONDS', aliases: :c
+    class_option :revision, type: :string, aliases: :r
     class_option :quiet, type: :boolean, aliases: :q
 
     default_task :status
@@ -33,7 +34,8 @@ module Herdsman
     end
 
     def config_overrides
-      options.select { |key, _| %w(fetch_cache).include? key }
+      overridable_options = %w(fetch_cache revision)
+      options.select { |key, _| overridable_options.include? key }
     end
 
     def env
