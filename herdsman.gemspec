@@ -3,6 +3,7 @@ $LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 require 'herdsman/version'
 
 Gem::Specification.new do |spec|
+  spec.add_dependency 'thor', '~> 0.19.0'
   spec.authors       = ['Tom Marshall']
   spec.description   =
     'Herdsman is a CLI utility for working with multiple Git repositories'
