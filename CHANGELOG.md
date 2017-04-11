@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `--revision`/`-r` option.
 * `defaults:` config with support for `revision:` and `fetch_cache:`.
 
+### Fixed
+
+* Missing `thor` dependency in gemspec.
+
 ## [v0.2.0] - 2017-03-01
 
 ### Added
