@@ -1,16 +1,12 @@
 module Herdsman
   class HerdMemberConfig
-    def initialize(args = {}, overrides = {}, defaults = {})
+    attr_reader :path
+    def initialize(path, args = {}, overrides = {}, defaults = {})
+      @path      = path
       @args      = args
       @overrides = overrides
       @defaults  = defaults
       validate!
-    end
-
-    def path
-      args.fetch('path')
-    rescue
-      args
     end
 
     def name

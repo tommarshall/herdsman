@@ -10,10 +10,10 @@ module Herdsman
     end
 
     def repos
-      config_repos = config['repos'] || config['repositories'] || []
-      defaults = config['defaults'] || {}
       config_repos.map do |herd_member_config|
-        HerdMemberConfig.new(herd_member_config, overrides, defaults)
+        HerdMemberConfig.new(herd_member_path(herd_member_config),
+                             herd_member_args(herd_member_config),
+                             overrides, config_defaults)
       end
     end
 
@@ -25,6 +25,28 @@ module Herdsman
       YAML.load_file(path)
     rescue
       raise 'No config found'
+    end
+
+    def config_defaults
+      config.fetch('defaults')
+    rescue
+      {}
+    end
+
+    def config_repos
+      config['repos'] || config['repositories'] || []
+    end
+
+    def herd_member_path(herd_member_config)
+      herd_member_config.fetch('path')
+    rescue
+      herd_member_config
+    end
+
+    def herd_member_args(herd_member_config)
+      herd_member_config.select { |key, _| key != 'path' }
+    rescue
+      {}
     end
 
     def validate!
