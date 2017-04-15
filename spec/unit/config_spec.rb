@@ -21,6 +21,21 @@ describe Herdsman::Config do
     end
   end
 
+  context 'with globbed paths' do
+    it 'expands globs into multiple HerdMemberConfig objects' do
+      args = { 'revision' => 'a-branch' }
+      config = described_class.new(config_fixture_path('globbed'))
+
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(
+        'spec/fixtures/config/globbed/bar', args, {}, {}
+      )
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(
+        'spec/fixtures/config/globbed/foo', args, {}, {}
+      )
+      expect(config.repos.size).to be 2
+    end
+  end
+
   context 'with overrides' do
     it 'passes the overrides to HerdMemberConfig' do
       args = { 'revision' => 'a-branch' }

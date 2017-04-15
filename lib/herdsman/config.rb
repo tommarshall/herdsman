@@ -11,10 +11,11 @@ module Herdsman
 
     def repos
       config_repos.map do |herd_member_config|
-        HerdMemberConfig.new(herd_member_path(herd_member_config),
-                             herd_member_args(herd_member_config),
-                             overrides, config_defaults)
-      end
+        args = herd_member_args(herd_member_config)
+        herd_member_paths(herd_member_config).map do |path|
+          HerdMemberConfig.new(path, args, overrides, config_defaults)
+        end
+      end.flatten
     end
 
     private
@@ -35,6 +36,11 @@ module Herdsman
 
     def config_repos
       config['repos'] || config['repositories'] || []
+    end
+
+    def herd_member_paths(herd_member_config)
+      config_path = herd_member_path(herd_member_config)
+      Dir.glob(config_path).select { |fn| File.directory?(fn) }
     end
 
     def herd_member_path(herd_member_config)
