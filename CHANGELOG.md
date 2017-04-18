@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `--fetch-cache=SECONDS`/`-c` option.
 * `--revision`/`-r` option.
 * `defaults:` config with support for `revision:` and `fetch_cache:`.
+* Glob support for `path:`.
 
 ### Fixed
 

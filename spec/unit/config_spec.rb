@@ -21,14 +21,29 @@ describe Herdsman::Config do
     end
   end
 
+  context 'with globbed paths' do
+    it 'expands globs into multiple HerdMemberConfig objects' do
+      args = { 'revision' => 'a-branch' }
+      config = described_class.new(config_fixture_path('globbed'))
+
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(
+        'spec/fixtures/config/globbed/bar', args, {}, {}
+      )
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with(
+        'spec/fixtures/config/globbed/foo', args, {}, {}
+      )
+      expect(config.repos.size).to be 2
+    end
+  end
+
   context 'with overrides' do
     it 'passes the overrides to HerdMemberConfig' do
-      args = { 'path' => '/tmp', 'revision' => 'a-branch' }
+      args = { 'revision' => 'a-branch' }
       overrides = { fetch_cache: 300 }
       config = described_class.new(config_fixture_path('valid'), overrides)
 
-      expect(Herdsman::HerdMemberConfig).to receive(:new).with(args, overrides,
-                                                               {})
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with('/tmp', args,
+                                                               overrides, {})
       config.repos
     end
   end
@@ -36,10 +51,10 @@ describe Herdsman::Config do
   context 'with defaults' do
     it 'passes the defaults to HerdMemberConfig' do
       config = described_class.new(config_fixture_path('defaults'))
-      args = { 'path' => '/tmp', 'revision' => 'a-branch' }
+      args = { 'revision' => 'a-branch' }
       defaults = { 'revision' => 'a-tag', 'fetch_cache' => 300 }
 
-      expect(Herdsman::HerdMemberConfig).to receive(:new).with(args, {},
+      expect(Herdsman::HerdMemberConfig).to receive(:new).with('/tmp', args, {},
                                                                defaults)
       config.repos
     end

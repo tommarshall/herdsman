@@ -1,0 +1,3 @@
+repos:
+  - path: spec/fixtures/config/globbed/*
+    revision: a-branch
